@@ -1,19 +1,32 @@
-from pydantic import BaseModel
-from pydantic.config import ConfigDict
-from typing import Optional
 from datetime import datetime
+from typing import Optional
+from enum import Enum
+from pydantic import BaseModel
 
-class TaskInputSchema(BaseModel):
+
+class TaskStatus(str, Enum):
+    todo = "todo"
+    in_progress = "in_progress"
+    completed = "completed"
+    cancelled = "cancelled"
+
+class TaskPriority(str, Enum):
+    low = "low"
+    medium = "medium"
+    high = "high"
+    critical = "critical"
+
+
+class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
-    status: str
-    priority: str = "medium"
+    status: TaskStatus
+    priority: Optional[TaskPriority] = None
 
-class TaskOutputSchema(TaskInputSchema):
+
+class TaskResponse(TaskCreate):
     id: int
     created_at: datetime
 
-    model_config = ConfigDict(from_attributes=True)
-
-class TaskUpdateSchema(BaseModel):
-    status: str
+    class Config:
+        from_attributes = True

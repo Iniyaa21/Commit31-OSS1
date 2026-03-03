@@ -12,8 +12,8 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-from .routers import tasks
-app.include_router(tasks.router)
+# Include versioned task routes
+app.include_router(tasks_router)
 
 @app.get("/")
 def home():
